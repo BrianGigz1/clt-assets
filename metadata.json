@@ -1,0 +1,21 @@
+{
+  "name": "Citus Logistics Token",
+  "symbol": "CLT",
+  "description": "The native utility token of the CiTus logistics platform. Used for payments, rewards, and access to premium logistics services.",
+  "image": "https://raw.githubusercontent.com/BrianGigz1/clt-assets/main/CLT123.png",
+  "external_url": "https://citus.app",
+  "attributes": [
+    { "trait_type": "Network", "value": "Solana" },
+    { "trait_type": "Type", "value": "Utility Token" },
+    { "trait_type": "Decimals", "value": "9" }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/BrianGigz1/clt-assets/main/CLT123.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}
