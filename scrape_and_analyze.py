@@ -3,6 +3,14 @@ import anthropic
 from crawl4ai import AsyncWebCrawler, CrawlerRunConfig, CacheMode
 
 
+class CrawlError(Exception):
+    """Raised when Crawl4AI cannot fetch or render a page."""
+
+
+class ClaudeRefusalError(Exception):
+    """Raised when Claude declines to answer (stop_reason == "refusal")."""
+
+
 async def scrape_url(url: str) -> str:
     """Renders the webpage with Playwright and returns cleaned Markdown."""
     run_config = CrawlerRunConfig(
@@ -13,10 +21,11 @@ async def scrape_url(url: str) -> str:
         result = await crawler.arun(url=url, config=run_config)
 
         if not result.success:
-            raise Exception(f"Failed to crawl {url}: {result.error_message}")
+            raise CrawlError(f"Failed to crawl {url}: {result.error_message}")
 
-        print(f" Successfully scraped {url} ({len(result.markdown)} characters)")
-        return result.markdown
+        markdown = str(result.markdown or "")
+        print(f" Successfully scraped {url} ({len(markdown)} characters)")
+        return markdown
 
 
 def analyze_with_claude(markdown_content: str, prompt: str) -> str:
@@ -46,7 +55,7 @@ def analyze_with_claude(markdown_content: str, prompt: str) -> str:
     )
 
     if response.stop_reason == "refusal":
-        raise Exception(f"Claude declined the request: {response.stop_details}")
+        raise ClaudeRefusalError(f"Claude declined the request: {response.stop_details}")
 
     return "".join(block.text for block in response.content if block.type == "text")
 
